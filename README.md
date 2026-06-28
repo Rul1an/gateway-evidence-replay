@@ -53,10 +53,11 @@ strict direction, and it requires complete coverage.
 
 ## Reason classes
 
-A `path_mismatch` or `incomplete` verdict carries one or more reason classes, for example `route_substitution`,
-`route_not_allowed`, `fallback_mismatch`, `endpoint_mismatch`, `policy_hash_mismatch`, `stream_commitment_mismatch`,
-`attestation_stale`, `stream_evidence_missing`, `evidence_not_verified`, `coverage_not_complete`, and
-`unknown_source_class`. They are sorted and deterministic, so two runs on the same bytes give the same reasons.
+Every verdict other than `path_verified` carries one or more reason classes. For `path_mismatch` and `incomplete`,
+examples are `route_substitution`, `route_not_allowed`, `fallback_mismatch`, `endpoint_mismatch`,
+`policy_hash_mismatch`, `stream_commitment_mismatch`, `attestation_stale`, `stream_evidence_missing`,
+`evidence_not_verified`, and `coverage_not_complete`; an `invalid` verdict carries `unknown_source_class` or
+`malformed_input`. Reasons are sorted and deterministic, so two runs on the same bytes give the same list.
 
 ## Why offline replay
 
