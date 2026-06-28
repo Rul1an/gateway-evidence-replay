@@ -71,6 +71,33 @@ fn replay_pack_rejects_manifest_path_traversal() {
     assert!(err.to_string().contains("unsafe path"), "{err}");
 }
 
+#[test]
+fn replay_pack_error_messages_escape_control_characters() {
+    let temp = copy_demo_dir();
+    let manifest_path = temp.path().join("manifest.json");
+    let manifest_sha_path = temp.path().join("manifest-sha256.txt");
+
+    let mut manifest: Value =
+        serde_json::from_str(&fs::read_to_string(&manifest_path).unwrap()).unwrap();
+    manifest["fixtures"][0]["file"] = Value::String("\u{1b}]0;owned\u{7}.json".to_string());
+    write_json(&manifest_path, &manifest);
+    fs::write(
+        &manifest_sha_path,
+        format!("{}\n", sha256_file(&manifest_path)),
+    )
+    .unwrap();
+
+    let message = replay_pack_dir(temp.path())
+        .expect_err("hostile manifest path must fail")
+        .to_string();
+    assert!(
+        !message.chars().any(char::is_control),
+        "raw control character leaked in {message:?}"
+    );
+    assert!(message.contains("\\u{1b}"), "{message}");
+    assert!(message.contains("\\u{7}"), "{message}");
+}
+
 fn copy_demo_dir() -> tempfile::TempDir {
     let temp = tempfile::tempdir().expect("tempdir");
     for name in DEMO_FILES {

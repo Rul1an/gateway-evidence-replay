@@ -113,7 +113,7 @@ pub fn replay_pack_dir(dir: &Path) -> Result<PackReport, PackError> {
     if pinned_manifest_sha != actual_manifest_sha {
         return Err(PackError::DigestMismatch {
             path: "manifest.json".to_string(),
-            expected: pinned_manifest_sha.to_string(),
+            expected: terminal_safe(pinned_manifest_sha),
             actual: actual_manifest_sha,
         });
     }
@@ -125,7 +125,7 @@ pub fn replay_pack_dir(dir: &Path) -> Result<PackReport, PackError> {
     if manifest.expected_sha256 != actual_expected_sha {
         return Err(PackError::DigestMismatch {
             path: "expected.json".to_string(),
-            expected: manifest.expected_sha256,
+            expected: terminal_safe(&manifest.expected_sha256),
             actual: actual_expected_sha,
         });
     }
@@ -135,8 +135,8 @@ pub fn replay_pack_dir(dir: &Path) -> Result<PackReport, PackError> {
         let actual = sha256_file(&dir.join(safe_path))?;
         if actual != fixture.sha256 {
             return Err(PackError::DigestMismatch {
-                path: fixture.file.clone(),
-                expected: fixture.sha256.clone(),
+                path: terminal_safe(&fixture.file),
+                expected: terminal_safe(&fixture.sha256),
                 actual,
             });
         }
@@ -152,7 +152,9 @@ pub fn replay_pack_dir(dir: &Path) -> Result<PackReport, PackError> {
         let passed =
             got.status == case.status && got.ceiling == case.ceiling && got.reasons == case.reasons;
         if !passed {
-            return Err(PackError::ReplayMismatch { path: case.file });
+            return Err(PackError::ReplayMismatch {
+                path: terminal_safe(&case.file),
+            });
         }
         cases.push(PackCaseReport {
             file: case.file,
@@ -229,7 +231,7 @@ fn safe_relative_path(path: &str) -> Result<&Path, PackError> {
         Ok(path_obj)
     } else {
         Err(PackError::UnsafePath {
-            path: path.to_string(),
+            path: terminal_safe(path),
         })
     }
 }
@@ -261,7 +263,21 @@ fn sha256_file(path: &Path) -> Result<String, PackError> {
 }
 
 fn display_path(path: &Path) -> String {
-    path.file_name()
+    let value = path
+        .file_name()
         .and_then(|name| name.to_str())
-        .map_or_else(|| path.display().to_string(), ToString::to_string)
+        .map_or_else(|| path.display().to_string(), ToString::to_string);
+    terminal_safe(&value)
+}
+
+fn terminal_safe(value: &str) -> String {
+    let mut out = String::with_capacity(value.len());
+    for ch in value.chars() {
+        if ch.is_control() {
+            out.push_str(&format!("\\u{{{:x}}}", ch as u32));
+        } else {
+            out.push(ch);
+        }
+    }
+    out
 }
