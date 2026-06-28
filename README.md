@@ -31,6 +31,9 @@ cargo build --release
 
 # Verify one clean bundle
 cargo run --release -- verify fixtures/gateway-path-v0/clean-route.json --json
+
+# Replay the pinned four-bundle demo pack
+cargo run --release -- replay-pack fixtures/gateway-path-v0/demo --json
 ```
 
 Expected: status `path_verified`, ceiling `observed_in_path`.
@@ -48,8 +51,12 @@ by SHA-256, so you can tell whether a bundle was tampered with:
 | `unknown-source.json` | `invalid` | `unknown_source_class` |
 
 ```bash
-cargo test    # replays every fixture and checks the manifest digests + tamper cases
+cargo run --release -- replay-pack fixtures/gateway-path-v0/demo --json
 ```
+
+Expected: status `passed`, `cases_total: 4`, `cases_passed: 4`. The command verifies `manifest.json`,
+`expected.json`, and every fixture digest before it trusts the expected verdicts, then replays each fixture against the
+pinned result. `cargo test` adds the tamper cases and developer checks.
 
 The `partial-route-substitution` case is the load-bearing one: a bundle with only partial coverage still returns
 `path_mismatch`, because partial evidence can refute a claim even when it cannot confirm one. Confirmation is the

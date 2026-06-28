@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
+use gateway_evidence_replay::pack::replay_pack_dir;
 use gateway_evidence_replay::schema::PROFILE;
 use gateway_evidence_replay::{verify_json_str, ReplayResult};
 
@@ -16,10 +17,22 @@ struct Cli {
 
 #[derive(Debug, Subcommand)]
 enum Commands {
+    /// Verify one gateway-path evidence bundle.
     Verify {
+        /// Evidence bundle JSON file.
         evidence: PathBuf,
+        /// Evidence profile to verify.
         #[arg(long, default_value = PROFILE)]
         format: String,
+        /// Emit a JSON verdict.
+        #[arg(long)]
+        json: bool,
+    },
+    /// Replay a digest-pinned demo pack and compare every verdict.
+    ReplayPack {
+        /// Directory containing manifest.json, manifest-sha256.txt, expected.json, and fixtures.
+        directory: PathBuf,
+        /// Emit a JSON replay report.
         #[arg(long)]
         json: bool,
     },
@@ -33,6 +46,7 @@ fn main() -> Result<()> {
             format,
             json,
         } => verify_command(evidence, &format, json),
+        Commands::ReplayPack { directory, json } => replay_pack_command(directory, json),
     }
 }
 
@@ -55,6 +69,22 @@ fn verify_command(evidence: PathBuf, format: &str, json: bool) -> Result<()> {
                 .ceiling
                 .map(|ceiling| serde_json::to_string(&ceiling).unwrap_or_default())
                 .unwrap_or_else(|| "null".to_string())
+        );
+    }
+
+    Ok(())
+}
+
+fn replay_pack_command(directory: PathBuf, json: bool) -> Result<()> {
+    let report = replay_pack_dir(&directory)
+        .with_context(|| format!("failed to replay pack {}", directory.display()))?;
+
+    if json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        println!(
+            "passed cases={}/{} manifest={}",
+            report.cases_passed, report.cases_total, report.manifest_sha256
         );
     }
 
