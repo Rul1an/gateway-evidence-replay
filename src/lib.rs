@@ -1,5 +1,6 @@
 //! Deterministic replay verifier for `gateway-path.v0` evidence bundles.
 
+pub mod pack;
 pub mod replay;
 pub mod schema;
 
