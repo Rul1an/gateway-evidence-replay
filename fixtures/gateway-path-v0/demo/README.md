@@ -9,3 +9,6 @@ Replay the full digest-pinned pack from the repository root:
 ```bash
 cargo run --release -- replay-pack fixtures/gateway-path-v0/demo --json
 ```
+
+Interpret `path_verified` as verified within the declared observed boundary, not as an end-to-end route guarantee.
+`incomplete` names a missing or unusable input boundary rather than guessing.
