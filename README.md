@@ -76,6 +76,21 @@ can then decide whether to collect more evidence, reject the action, or apply it
 
 The asymmetry is deliberate: partial evidence can still contradict a claim, but only complete coverage can confirm one.
 
+## Evidence source class
+
+The source class is part of the input boundary. `gateway-path.v0` accepts a retained record that declares where the
+path facts came from, then caps the verdict to what that source can support. Unknown provenance is `invalid`, not a
+weaker success.
+
+In the current profile, a verified bundle with complete coverage can reach `path_verified` at the
+`observed_in_path` ceiling. That means the retained gateway-path evidence is internally consistent inside the declared
+observed boundary. It does not mean the tool independently proved provider honesty, model-output truth, physical-world
+state, or anything outside the retained route, fallback, endpoint, policy, stream, freshness, and provenance fields.
+
+This is separate from text-only response checking. A response can sound plausible while the retained path evidence says
+something else, and retained path evidence can be incomplete even when the response is cleanly written. The replay
+verdict is therefore about the retained evidence, not about the prose around it.
+
 ## Reason classes
 
 Every verdict other than `path_verified` carries one or more reason classes. For `path_mismatch` and `incomplete`,
