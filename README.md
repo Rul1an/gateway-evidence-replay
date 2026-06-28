@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="gateway-evidence-replay: offline replay of retained LLM-gateway evidence to a bounded verdict" width="820">
+</p>
+
 # gateway-evidence-replay
 
 A small offline tool that replays retained gateway-path evidence to a bounded verdict.
