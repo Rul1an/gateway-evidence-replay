@@ -1,0 +1,41 @@
+[package]
+name = "gateway-evidence-replay"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+repository = "https://github.com/Rul1an/gateway-evidence-replay"
+authors = ["Rul1an <roelschuurkes@gmail.com>"]
+description = "Deterministic offline replay verifier for gateway-path evidence bundles."
+readme = "README.md"
+# Experimental v0. Distributed as source and release binaries, not on crates.io yet.
+publish = false
+
+[[bin]]
+name = "gateway-evidence-replay"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde", "std"], default-features = false }
+clap = { version = "4", features = ["derive", "env"] }
+serde = { version = "1.0", features = ["derive", "std"], default-features = false }
+serde_json = { version = "1.0", features = ["std"], default-features = false }
+thiserror = "2"
+
+[dev-dependencies]
+hex = "0.4"
+sha2 = "0.11"
+tempfile = "3"
+
+[lints.rust]
+unsafe_code = "deny"
+missing_docs = "allow"
+rust_2018_idioms = { level = "warn", priority = -1 }
+unused_lifetimes = "warn"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "allow", priority = -1 }
+unwrap_used = "allow"
+print_stdout = "allow"
+missing_errors_doc = "allow"

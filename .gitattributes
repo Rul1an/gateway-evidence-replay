@@ -1,0 +1,6 @@
+# Stable, cross-platform line endings so the fixture digests are reproducible.
+* text=auto eol=lf
+*.json text eol=lf
+*.rs text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
