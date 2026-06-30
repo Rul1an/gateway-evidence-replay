@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
+use gateway_evidence_replay::composition::replay_composition_pack_dir;
 use gateway_evidence_replay::pack::replay_pack_dir;
 use gateway_evidence_replay::schema::PROFILE;
 use gateway_evidence_replay::{verify_json_str, ReplayResult};
@@ -36,6 +37,14 @@ enum Commands {
         #[arg(long)]
         json: bool,
     },
+    /// Replay a two-record composition pack without emitting a whole-action verdict.
+    ReplayCompositionPack {
+        /// Directory containing manifest.json, manifest-sha256.txt, expected.json, and fixtures.
+        directory: PathBuf,
+        /// Emit a JSON replay report.
+        #[arg(long)]
+        json: bool,
+    },
 }
 
 fn main() -> Result<()> {
@@ -47,6 +56,9 @@ fn main() -> Result<()> {
             json,
         } => verify_command(evidence, &format, json),
         Commands::ReplayPack { directory, json } => replay_pack_command(directory, json),
+        Commands::ReplayCompositionPack { directory, json } => {
+            replay_composition_pack_command(directory, json)
+        }
     }
 }
 
@@ -85,6 +97,22 @@ fn replay_pack_command(directory: PathBuf, json: bool) -> Result<()> {
         println!(
             "passed cases={}/{} manifest={}",
             report.cases_passed, report.cases_total, report.manifest_sha256
+        );
+    }
+
+    Ok(())
+}
+
+fn replay_composition_pack_command(directory: PathBuf, json: bool) -> Result<()> {
+    let report = replay_composition_pack_dir(&directory)
+        .with_context(|| format!("failed to replay composition pack {}", directory.display()))?;
+
+    if json {
+        println!("{}", serde_json::to_string_pretty(&report)?);
+    } else {
+        println!(
+            "passed action={} run={} manifest={}",
+            report.action_id, report.run_id, report.manifest_sha256
         );
     }
 
