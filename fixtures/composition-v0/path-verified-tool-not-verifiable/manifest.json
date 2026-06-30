@@ -1,0 +1,16 @@
+{
+  "profile": "gateway-composition.v0.demo",
+  "gateway_evidence_replay_version": "0.2.0",
+  "claims": "two-record composition fixture; no whole-action trust score",
+  "action_id": "action-composition-001",
+  "run_id": "run-composition-001",
+  "gateway_record": {
+    "file": "gateway-path.json",
+    "sha256": "sha256:33f86254d188929ef8e1e95caf3d17c271bf02ca31b7fe75c1b25226962840bb"
+  },
+  "tool_surface_record": {
+    "file": "tool-surface.json",
+    "sha256": "sha256:7cb72215bf375d1242f78e743afabdd51134434e98d212416124802184c554e5"
+  },
+  "expected_sha256": "sha256:2efe2e2720d16dc4528a823339249a12a1e6d56d84a3ad4719e9579cfdbe3d1f"
+}

@@ -1,0 +1,34 @@
+{
+  "request_id": "run-composition-002",
+  "coverage": "partial",
+  "source_class": "boundary_observed",
+  "now": "2026-06-30T10:00:00Z",
+  "claim": {
+    "requested_route": "openai:gpt-4.1",
+    "expected_fallback": null,
+    "expected_endpoint": "https://api.openai.example/v1/responses",
+    "expected_stream_commitment": "stream:composition-mismatch"
+  },
+  "policy": {
+    "allowed_routes": [
+      "openai:gpt-4.1",
+      "openai:gpt-4.1-mini"
+    ],
+    "allowed_fallbacks": [
+      "openai:gpt-4.1-mini"
+    ],
+    "endpoint": "https://api.openai.example/v1/responses",
+    "policy_hash": "sha256:composition-policy"
+  },
+  "evidence": {
+    "signature_verified": true,
+    "runtime_measurement_verified": true,
+    "attestation_valid_until": "2026-06-30T10:05:00Z",
+    "selected_route": "openai:gpt-4.1-mini",
+    "fallback_route": null,
+    "endpoint": "https://api.openai.example/v1/responses",
+    "policy_hash": "sha256:composition-policy",
+    "stream_commitment": "stream:composition-mismatch"
+  },
+  "profile": "gateway-path.v0"
+}

@@ -1,0 +1,16 @@
+{
+  "profile": "gateway-composition.v0.demo.expected",
+  "gateway_path": {
+    "file": "gateway-path.json",
+    "status": "path_verified",
+    "ceiling": "observed_in_path",
+    "reasons": []
+  },
+  "tool_surface": {
+    "file": "tool-surface.json",
+    "status": "not_verifiable",
+    "reasons": [
+      "coverage_not_complete"
+    ]
+  }
+}

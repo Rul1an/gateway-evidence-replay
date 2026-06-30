@@ -1,0 +1,16 @@
+{
+  "profile": "gateway-composition.v0.demo.expected",
+  "gateway_path": {
+    "file": "gateway-path.json",
+    "status": "path_mismatch",
+    "ceiling": null,
+    "reasons": [
+      "route_substitution"
+    ]
+  },
+  "tool_surface": {
+    "file": "tool-surface.json",
+    "status": "unchanged",
+    "reasons": []
+  }
+}

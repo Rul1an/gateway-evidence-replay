@@ -62,6 +62,26 @@ The `partial-route-substitution` case is the load-bearing one: a bundle with onl
 `path_mismatch`, because partial evidence can refute a claim even when it cannot confirm one. Confirmation is the
 strict direction, and it requires complete coverage.
 
+## Two-record composition fixture
+
+`fixtures/composition-v0/` is a small v1-boundary fixture for composing one gateway-path verdict and one tool-surface
+verdict under the same action/run context. The two records are recomputed separately. The report deliberately does not
+emit a scalar `whole_action_trusted` verdict.
+
+```bash
+cargo run --release -- replay-composition-pack fixtures/composition-v0/path-verified-tool-not-verifiable --json
+cargo run --release -- replay-composition-pack fixtures/composition-v0/tool-unchanged-path-mismatch --json
+```
+
+The asymmetric cases are the point:
+
+- `path-verified-tool-not-verifiable`: the retained gateway-path evidence reaches `path_verified`, while the
+  tool-surface record remains `not_verifiable`.
+- `tool-unchanged-path-mismatch`: the tool surface is `unchanged`, while the gateway path returns `path_mismatch`.
+
+That keeps the seam honest: a relying party can combine the two bounded statements, but neither record decides the
+whole action and neither upgrades the other boundary.
+
 ## Coverage boundary and verdict semantics
 
 **Partial evidence can refute, but never confirm. Confirmation is the strict direction.** Only complete coverage can

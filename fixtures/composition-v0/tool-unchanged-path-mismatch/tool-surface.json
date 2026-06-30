@@ -1,0 +1,12 @@
+{
+  "profile": "tool-surface.v0",
+  "action_id": "action-composition-002",
+  "run_id": "run-composition-002",
+  "coverage": "complete",
+  "approved_tool_surface_hash": "sha256:approved-surface-b",
+  "observed_tool_surface_hash": "sha256:approved-surface-b",
+  "evidence": {
+    "evidence_verified": true
+  },
+  "finding": null
+}

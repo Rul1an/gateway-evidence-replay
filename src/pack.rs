@@ -43,18 +43,10 @@ pub struct PackCaseReport {
 
 #[derive(Debug, Error)]
 pub enum PackError {
-    #[error("read {path}: {source}")]
-    Read {
-        path: String,
-        #[source]
-        source: std::io::Error,
-    },
-    #[error("parse {path}: {source}")]
-    Parse {
-        path: String,
-        #[source]
-        source: serde_json::Error,
-    },
+    #[error("read {path}: {detail}")]
+    Read { path: String, detail: String },
+    #[error("parse {path}: {detail}")]
+    Parse { path: String, detail: String },
     #[error("{path} digest mismatch: expected {expected}, got {actual}")]
     DigestMismatch {
         path: String,
@@ -243,21 +235,21 @@ where
     let body = read_to_string(path)?;
     serde_json::from_str(&body).map_err(|source| PackError::Parse {
         path: display_path(path),
-        source,
+        detail: terminal_safe(&source.to_string()),
     })
 }
 
 fn read_to_string(path: &Path) -> Result<String, PackError> {
     fs::read_to_string(path).map_err(|source| PackError::Read {
         path: display_path(path),
-        source,
+        detail: terminal_safe(&source.to_string()),
     })
 }
 
 fn sha256_file(path: &Path) -> Result<String, PackError> {
     let bytes = fs::read(path).map_err(|source| PackError::Read {
         path: display_path(path),
-        source,
+        detail: terminal_safe(&source.to_string()),
     })?;
     Ok(format!("sha256:{}", hex::encode(Sha256::digest(bytes))))
 }
