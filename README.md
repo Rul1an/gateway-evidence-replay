@@ -64,6 +64,11 @@ strict direction, and it requires complete coverage.
 
 ## Coverage boundary and verdict semantics
 
+**Partial evidence can refute, but never confirm. Confirmation is the strict direction.** Only complete coverage can
+produce `path_verified`. Any retained evidence, even partial, can produce `path_mismatch` when it contradicts the
+claimed path. This asymmetry is the core invariant of the tool: a weak or partial signal never drives a positive
+verdict on its own, but a clear contradiction still fires.
+
 `path_verified` means "verified within the declared observed boundary." For the current `gateway-path.v0` profile,
 that boundary is the retained route, fallback, endpoint, policy hash, stream commitment, freshness, and provenance
 facts carried by the bundle. It is not an end-to-end route guarantee, a provider-honesty claim, or proof that no other
@@ -73,8 +78,6 @@ system state existed outside the retained boundary.
 claim because a required input was missing or unusable: the evidence was not verified, freshness was missing or stale,
 stream evidence was missing, or coverage was not complete. The reason list names which boundary failed. A relying party
 can then decide whether to collect more evidence, reject the action, or apply its own policy.
-
-The asymmetry is deliberate: partial evidence can still contradict a claim, but only complete coverage can confirm one.
 
 ## Evidence source class
 
