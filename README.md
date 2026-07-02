@@ -143,6 +143,11 @@ This is an experimental v0 that deliberately does one narrow thing. It does NOT 
 If you produce or consume gateway-path evidence: does an offline replay to a bounded verdict help you, and what is
 missing? Issues and Discussions are open, and "no one would use this" is a useful answer too.
 
+## Related
+
+- [Assay](https://github.com/Rul1an/assay) produces offline-verifiable evidence bundles at the MCP tool-call boundary.
+- [observed-effect-v0](https://github.com/Rul1an/observed-effect-v0) carries worked examples of the bounded observed-effect record this verifier can replay against.
+
 ## License
 
 Apache-2.0. Copyright 2026 Rul1an.
